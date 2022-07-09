@@ -1,25 +1,35 @@
-import logo from './logo.svg';
 import './App.css';
-
+import Details from './components/Details';
+import Form from './components/Form';
+import Sample from './components/Sample';
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    let data = [
+      {
+        name:"Nagarajan",
+        email:"nag@gmail.com",
+        mobile:"23145667"
+      },
+      {
+        name:"Athul",
+        email:"athul@gmail.com",
+        mobile:"5464654"
+      },
+      {
+        name:"Adhira",
+        email:"adhira@gmail.com",
+        mobile:"568989"
+      },
+      {
+        name:"Akal",
+        email:"akal@gmail.com",
+        mobile:"568989"
+      }
+    ]
+  return <>
+    <Sample/>
+    <Form/>
+    <Details details = {data}/>
+  </>
 }
 
 export default App;
