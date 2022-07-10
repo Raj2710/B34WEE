@@ -1,4 +1,5 @@
 import React from 'react'
+import {Link} from 'react-router-dom';
 
 function SideBar() {
   return <>
@@ -18,18 +19,41 @@ function SideBar() {
 
 {/* <!-- Nav Item - Dashboard --> */}
 <li className="nav-item active">
-    <a className="nav-link" href="index.html">
-        <i className="fas fa-fw fa-tachometer-alt"></i>
-        <span>Dashboard</span></a>
+    <Link to='/dashboard'>
+        <div className="nav-link">
+            <i className="fas fa-fw fa-tachometer-alt"></i>
+            <span>Dashboard</span>
+        </div>
+    </Link>
 </li>
 
-                {/* <!-- Divider --> */}
-                <hr className="sidebar-divider"/>
+{/* <!-- Divider --> */}
+<hr className="sidebar-divider"/>
 
-                {/* <!-- Heading --> */}
-                <div className="sidebar-heading">
-                    Interface
-                </div>
+{/* <!-- Heading --> */}
+<div className="sidebar-heading">
+    Interface
+</div>
+
+<li className="nav-item active">
+    <Link to='/add-user'>
+        <div className="nav-link">
+            <i class="fa-solid fa-user-plus"></i>
+            <span>Add User</span>
+        </div>
+    </Link>
+</li>
+
+<li className="nav-item active">
+    <Link to='/edit-user/5?name=raj'>
+        <div className="nav-link">
+            <i class="fa-solid fa-user-pen"></i>
+            <span>Edit User</span>
+        </div>
+    </Link>
+</li>
+
+
 
 </ul>
     </div>

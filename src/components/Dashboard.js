@@ -1,5 +1,5 @@
 import React from 'react'
-
+import {Link,Outlet} from 'react-router-dom';
 function Dashboard(props) {
   return <>
     <div className="container-fluid">
@@ -11,7 +11,6 @@ function Dashboard(props) {
             className="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
 </div>
 
-{/* <!-- Content Row --> */}
 <div className="row">
 
     {/* <!-- Earnings (Monthly) Card Example --> */}
@@ -97,7 +96,17 @@ function Dashboard(props) {
         </div>
     </div>
 </div>
-{/* <!-- Content Row --> */}
+
+<div>
+    This is the Sub Main Page
+
+   <nav>
+       <button> <Link to='profile'>Profile</Link></button>
+       &nbsp;
+       <button> <Link to='account'>Account</Link></button>
+   </nav>
+   <Outlet/>
+</div>
 </div>
   </>
 }
