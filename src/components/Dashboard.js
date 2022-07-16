@@ -1,6 +1,18 @@
 import React from 'react'
-import {Link,Outlet} from 'react-router-dom';
+import {Link,Outlet,useNavigate} from 'react-router-dom';
+import Table from 'react-bootstrap/Table';
+import Button from 'react-bootstrap/Button';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import EditIcon from '@mui/icons-material/Edit';
 function Dashboard(props) {
+    let navigate = useNavigate();
+
+    let handleDelete = (i)=>{
+        let data = [...props.data.user]
+        data.splice(i,1)
+        props.data.setUser(data)
+    }
+
   return <>
     <div className="container-fluid">
 
@@ -21,7 +33,7 @@ function Dashboard(props) {
                     <div className="col mr-2">
                         <div className="text-xs font-weight-bold text-primary text-uppercase mb-1">
                             Earnings (Monthly)</div>
-                        <div className="h5 mb-0 font-weight-bold text-gray-800">${props.data.monthly}</div>
+                        <div className="h5 mb-0 font-weight-bold text-gray-800">${props.data.data.monthly}</div>
                     </div>
                     <div className="col-auto">
                         <i className="fas fa-calendar fa-2x text-gray-300"></i>
@@ -39,7 +51,7 @@ function Dashboard(props) {
                     <div className="col mr-2">
                         <div className="text-xs font-weight-bold text-success text-uppercase mb-1">
                             Earnings (Annual)</div>
-                        <div className="h5 mb-0 font-weight-bold text-gray-800">${props.data.yearly}</div>
+                        <div className="h5 mb-0 font-weight-bold text-gray-800">${props.data.data.yearly}</div>
                     </div>
                     <div className="col-auto">
                         <i className="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -59,12 +71,12 @@ function Dashboard(props) {
                         </div>
                         <div className="row no-gutters align-items-center">
                             <div className="col-auto">
-                                <div className="h5 mb-0 mr-3 font-weight-bold text-gray-800">{props.data.task}%</div>
+                                <div className="h5 mb-0 mr-3 font-weight-bold text-gray-800">{props.data.data.task}%</div>
                             </div>
                             <div className="col">
                                 <div className="progress progress-sm mr-2">
                                     <div className="progress-bar bg-info" role="progressbar"
-                                        style={{"width": `${props.data.task}%`}} aria-valuenow={props.data.task} aria-valuemin="0"
+                                        style={{"width": `${props.data.data.task}%`}} aria-valuenow={props.data.data.task} aria-valuemin="0"
                                         aria-valuemax="100"></div>
                                 </div>
                             </div>
@@ -86,7 +98,7 @@ function Dashboard(props) {
                     <div className="col mr-2">
                         <div className="text-xs font-weight-bold text-warning text-uppercase mb-1">
                             Pending Requests</div>
-                        <div className="h5 mb-0 font-weight-bold text-gray-800">{props.data.pending}</div>
+                        <div className="h5 mb-0 font-weight-bold text-gray-800">{props.data.data.pending}</div>
                     </div>
                     <div className="col-auto">
                         <i className="fas fa-comments fa-2x text-gray-300"></i>
@@ -96,6 +108,46 @@ function Dashboard(props) {
         </div>
     </div>
 </div>
+
+
+
+<h3>List of Users</h3>
+
+<Table striped bordered hover>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Email</th>
+          <th>Mobile</th>
+          <th>DOB</th>
+          <th>Location</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+            {
+                props.data.user.map((e,i)=>{
+                    return <tr>
+                        <td>{i+1}</td>
+                        <td>{e.firstName}</td>
+                        <td>{e.lastName}</td>
+                        <td>{e.email}</td>
+                        <td>{e.mobile}</td>
+                        <td>{e.dob}</td>
+                        <td>{e.location}</td>
+                        <td>
+                            <Button variant='primary' onClick={()=>navigate(`/edit-user/${i}`)}> <EditIcon/> Edit</Button>
+                            &nbsp;
+                            &nbsp;
+                            <Button variant='danger' onClick={()=>handleDelete(i)}><DeleteForeverIcon/> Delete</Button>
+                        </td>
+                    </tr>
+                })
+            }
+      </tbody>
+    </Table>
 
 <div>
     This is the Sub Main Page
