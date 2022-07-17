@@ -1,17 +1,21 @@
-import React,{useState} from 'react'
+import React,{useState,useContext} from 'react'
 import {useParams} from 'react-router-dom'
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import {useNavigate} from 'react-router-dom'
+import {UserContext} from './../App'
 
 function EditUser(props) {
   let params = useParams();
-  let [firstName,setFName] = useState(props.data.user[params.id].firstName)
-  let [lastName,setLName] = useState(props.data.user[params.id].lastName)
-  let [email,setEmail] = useState(props.data.user[params.id].email)
-  let [dob,setDOB] = useState(props.data.user[params.id].dob)
-  let [mobile,setMobile] = useState(props.data.user[params.id].mobile)
-  let [location,setLocation] = useState(props.data.user[params.id].location)
+
+  let context = useContext(UserContext)
+
+  let [firstName,setFName] = useState(context.user[params.id].firstName)
+  let [lastName,setLName] = useState(context.user[params.id].lastName)
+  let [email,setEmail] = useState(context.user[params.id].email)
+  let [dob,setDOB] = useState(context.user[params.id].dob)
+  let [mobile,setMobile] = useState(context.user[params.id].mobile)
+  let [location,setLocation] = useState(context.user[params.id].location)
 
   let navigate = useNavigate()
   let handleSubmit = ()=>{
@@ -23,11 +27,11 @@ function EditUser(props) {
       mobile,
       location
     }
-    let user = [...props.data.user]
+    let user = [...context.user]
 
     user.splice(params.id,1,data)
 
-    props.data.setUser(user)
+    context.setUser(user)
     navigate('/dashboard')
     
   }

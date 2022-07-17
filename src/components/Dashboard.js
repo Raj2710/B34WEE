@@ -1,16 +1,20 @@
-import React from 'react'
+import React,{useContext} from 'react'
 import {Link,Outlet,useNavigate} from 'react-router-dom';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
+import {UserContext} from './../App';
+
 function Dashboard(props) {
     let navigate = useNavigate();
 
+    let context = useContext(UserContext);
+
     let handleDelete = (i)=>{
-        let data = [...props.data.user]
+        let data = [...context.user]
         data.splice(i,1)
-        props.data.setUser(data)
+        context.setUser(data)
     }
 
   return <>
@@ -128,8 +132,8 @@ function Dashboard(props) {
       </thead>
       <tbody>
             {
-                props.data.user.map((e,i)=>{
-                    return <tr>
+                context.user.map((e,i)=>{
+                    return <tr key={i}>
                         <td>{i+1}</td>
                         <td>{e.firstName}</td>
                         <td>{e.lastName}</td>

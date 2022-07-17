@@ -1,9 +1,10 @@
-import React,{useState} from 'react'
+import React,{useState,useContext} from 'react'
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import {useNavigate} from 'react-router-dom'
+import {UserContext} from './../App'
 
-function CreateUser(props) {
+function CreateUser() {
 
   let [firstName,setFName] = useState("")
   let [lastName,setLName] = useState("")
@@ -12,6 +13,8 @@ function CreateUser(props) {
   let [mobile,setMobile] = useState("")
   let [location,setLocation] = useState("")
   let navigate = useNavigate()
+  let context = useContext(UserContext)
+  
   let handleSubmit = ()=>{
     let data = {
       firstName,
@@ -21,9 +24,9 @@ function CreateUser(props) {
       mobile,
       location
     }
-    let user = [...props.data.user]
+    let user = [...context.user]
     user.push(data)
-    props.data.setUser(user)
+    context.setUser(user)
     navigate('/dashboard')
     
   }
