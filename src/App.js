@@ -50,7 +50,7 @@ function App() {
   <div id="wrapper">
     <BrowserRouter>
    
-      <SideBar/>
+      <SideBar/>  
       <UserContext.Provider value={{user,setUser}}>
       <div id="content-wrapper" className="d-flex flex-column">
         <div id="content">
@@ -60,7 +60,7 @@ function App() {
                   <Route path='account' element = {<Account/>}/>
               </Route>
               <Route path='/add-user' element  = {<CreateUser/>}/>
-              <Route path='/edit-user/:id' element = {<EditUser data={{user,setUser}}/>}/>
+              <Route path='/edit-user/:id' element = {<EditUser/>}/>
               <Route path="*" element={<Navigate to='/dashboard'/>}/>
           </Routes>
         </div>

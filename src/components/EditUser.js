@@ -5,7 +5,7 @@ import Form from 'react-bootstrap/Form';
 import {useNavigate} from 'react-router-dom'
 import {UserContext} from './../App'
 
-function EditUser(props) {
+function EditUser() {
   let params = useParams();
 
   let context = useContext(UserContext)
