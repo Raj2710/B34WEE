@@ -11,6 +11,10 @@ function Dashboard(props) {
 
     let context = useContext(UserContext);
 
+    console.log('SS',window.sessionStorage.getItem('data'));
+
+    console.log('LS',window.localStorage.getItem('localData'))
+
     let handleDelete = (i)=>{
         let data = [...context.user]
         data.splice(i,1)

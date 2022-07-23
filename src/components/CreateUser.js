@@ -6,6 +6,8 @@ import {UserContext} from './../App'
 
 function CreateUser() {
 
+  window.localStorage.setItem('localData',"I am Local Storage")
+
   let [firstName,setFName] = useState("")
   let [lastName,setLName] = useState("")
   let [email,setEmail] = useState("")

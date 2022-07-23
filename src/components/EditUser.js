@@ -10,6 +10,8 @@ function EditUser() {
 
   let context = useContext(UserContext)
 
+  window.sessionStorage.setItem('data',"I am Session Storage")
+
   let [firstName,setFName] = useState(context.user[params.id].firstName)
   let [lastName,setLName] = useState(context.user[params.id].lastName)
   let [email,setEmail] = useState(context.user[params.id].email)
