@@ -1,26 +1,39 @@
-import React,{useState,useContext} from 'react'
+import React,{useState, useEffect} from 'react'
 import {useParams} from 'react-router-dom'
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import {useNavigate} from 'react-router-dom'
-import {UserContext} from './../App'
+import axios from 'axios'
+import {url} from './../App'
 
 function EditUser() {
   let params = useParams();
 
-  let context = useContext(UserContext)
+  // window.sessionStorage.setItem('data',"I am Session Storage")
 
-  window.sessionStorage.setItem('data',"I am Session Storage")
+  let [firstName,setFName] = useState("")
+  let [lastName,setLName] = useState("")
+  let [email,setEmail] = useState("")
+  let [dob,setDOB] = useState("")
+  let [mobile,setMobile] = useState("")
+  let [location,setLocation] = useState("")
 
-  let [firstName,setFName] = useState(context.user[params.id].firstName)
-  let [lastName,setLName] = useState(context.user[params.id].lastName)
-  let [email,setEmail] = useState(context.user[params.id].email)
-  let [dob,setDOB] = useState(context.user[params.id].dob)
-  let [mobile,setMobile] = useState(context.user[params.id].mobile)
-  let [location,setLocation] = useState(context.user[params.id].location)
+  useEffect(()=>{
+    getData();
+  },[])
+
+  let getData = async() =>{
+    let res = await axios.get(`${url}/${params.id}`)
+    setFName(res.data.firstName)
+    setLName(res.data.lastName)
+    setEmail(res.data.email)
+    setDOB(res.data.dob)
+    setMobile(res.data.mobile)
+    setLocation(res.data.location)
+  }
 
   let navigate = useNavigate()
-  let handleSubmit = ()=>{
+  let handleSubmit = async()=>{
     let data = {
       firstName,
       lastName,
@@ -29,12 +42,11 @@ function EditUser() {
       mobile,
       location
     }
-    let user = [...context.user]
-
-    user.splice(params.id,1,data)
-
-    context.setUser(user)
-    navigate('/dashboard')
+   
+    let res = await axios.put(`${url}/${params.id}`,data)
+    
+    if(res.status===200)
+      navigate('/dashboard')
     
   }
   return<div>

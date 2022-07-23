@@ -7,9 +7,11 @@ import CreateUser from './components/CreateUser'
 import EditUser from './components/EditUser'
 import Profile from './components/Profile'
 import Account from './components/Account'
-import React, {useState} from 'react'
+import React from 'react'
 import HooksDemo from './components/HooksDemo';
+export const url = 'https://61ee1f7ed593d20017dbac50.mockapi.io/students'
 export const UserContext = React.createContext();
+
 
 function App() {
 
@@ -20,39 +22,19 @@ function App() {
     pending:10
   }
 
-  let [user,setUser] = useState([
-    {
-      firstName:"Adhiban",
-      lastName:"Madhav",
-      email:"adhiban.madhav@gmail.com",
-      mobile:"1234564789",
-      dob:"12-09-2010",
-      location:"Chennai"
-    },
-    {
-      firstName:"Srikanth",
-      lastName:"Kureshi",
-      email:"srikanth.kureshi@gmail.com",
-      mobile:"5689237415",
-      dob:"12-09-2010",
-      location:"Bangalore"
-    },
-    {
-      firstName:"Nelson",
-      lastName:"Manikam",
-      email:"nelson.manikam@gmail.com",
-      mobile:"4578126935",
-      dob:"12-09-2005",
-      location:"Hyedrabad"
-    }
-  ])
 
+  // useEffect(()=>{
+  //   fetch('https://61ee1f7ed593d20017dbac50.mockapi.io/students')
+  //   .then(response => response.json())
+  //   .then(res=>console.log(res))
+  //   .catch(err=>console.log(err))
+  // },[])
+  
   return <>
   <div id="wrapper">
     <BrowserRouter>
    
       <SideBar/>  
-      <UserContext.Provider value={{user,setUser}}>
       <div id="content-wrapper" className="d-flex flex-column">
         <div id="content">
           <Routes>
@@ -68,7 +50,6 @@ function App() {
         </div>
         <Footer/>
       </div>
-      </UserContext.Provider>
     </BrowserRouter>
   </div>
   </>

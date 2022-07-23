@@ -1,12 +1,24 @@
-import React,{useState,useContext} from 'react'
+import React,{useState} from 'react'
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import {useNavigate} from 'react-router-dom'
-import {UserContext} from './../App'
+import {url} from './../App'
+import axios from 'axios'
 
 function CreateUser() {
 
-  window.localStorage.setItem('localData',"I am Local Storage")
+  // window.localStorage.setItem('localData',"I am Local Storage")
+
+
+  // useEffect(()=>{
+  //   console.log("Use effect called!")
+  // })//it will be called as many times as the component re-renders
+
+  // useEffect(()=>{
+  //   console.log("Use effect called!")
+  // },[])//use effect will be called only when the component is redering for the first time
+
+  
 
   let [firstName,setFName] = useState("")
   let [lastName,setLName] = useState("")
@@ -15,9 +27,9 @@ function CreateUser() {
   let [mobile,setMobile] = useState("")
   let [location,setLocation] = useState("")
   let navigate = useNavigate()
-  let context = useContext(UserContext)
+
   
-  let handleSubmit = ()=>{
+  let handleSubmit = async()=>{
     let data = {
       firstName,
       lastName,
@@ -26,10 +38,9 @@ function CreateUser() {
       mobile,
       location
     }
-    let user = [...context.user]
-    user.push(data)
-    context.setUser(user)
-    navigate('/dashboard')
+    let res = await axios.post(url,data)
+    if(res.status===201)
+      navigate('/dashboard')
     
   }
   return<div>

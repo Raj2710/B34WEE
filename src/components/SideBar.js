@@ -1,11 +1,8 @@
-import React,{useContext} from 'react'
+import React from 'react'
 import {Link} from 'react-router-dom';
-import {UserContext} from './../App'
 
 function SideBar() {
-
-    let testcontext = useContext(UserContext);
-    console.log('test context', testcontext)
+    // console.log('test context', testcontext)
   return <>
     <div>
     <ul className="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
