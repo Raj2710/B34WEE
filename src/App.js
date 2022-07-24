@@ -4,7 +4,6 @@ import Dashboard from './components/Dashboard';
 import Footer from './components/Footer';
 import {BrowserRouter,Routes,Route,Navigate} from 'react-router-dom'
 import CreateUser from './components/CreateUser'
-import EditUser from './components/EditUser'
 import Profile from './components/Profile'
 import Account from './components/Account'
 import React from 'react'
@@ -43,7 +42,7 @@ function App() {
                   <Route path='account' element = {<Account/>}/>
               </Route>
               <Route path='/add-user' element  = {<CreateUser/>}/>
-              <Route path='/edit-user/:id' element = {<EditUser/>}/>
+              <Route path='/edit-user/:id' element = {<CreateUser/>}/>
               <Route path='/hooks-demo' element={<HooksDemo/>}/>
               <Route path="*" element={<Navigate to='/dashboard'/>}/>
           </Routes>

@@ -1,6 +1,5 @@
-import React,{useState} from 'react'
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
+import React,{useState,useEffect} from 'react'
+import {useParams} from 'react-router-dom'
 import {useNavigate} from 'react-router-dom'
 import {url} from './../App'
 import axios from 'axios'
@@ -9,24 +8,57 @@ import { useFormik } from 'formik';
 
 function CreateUser() {
 
+  
+  let params = useParams();
+  let [firstName,setFName] = useState("")
+  let [lastName,setLName] = useState("")
+  let [email,setEmail] = useState("")
+  let [dob,setDOB] = useState("")
+  let [mobile,setMobile] = useState("")
+  let [location,setLocation] = useState("")
+
+  let getData = async()=>{
+    let res = await axios.get(`${url}/${params.id}`)
+    setFName(res.data.firstName)
+    setLName(res.data.lastName)
+    setEmail(res.data.email)
+    setDOB(res.data.dob)
+    setMobile(res.data.mobile)
+    setLocation(res.data.location)
+    
+  }
+
+  useEffect(()=>{
+    if(params.id)
+      getData()
+  },[])
+
   let navigate = useNavigate()
   let handleSubmit = async(data)=>{
     console.log(data)
-    let res = await axios.post(url,data)
-    if(res.status===201)
+    let res
+    if(params.id) {
+      res = await axios.put(`${url}/${params.id}`,data)
+    }
+    else
+    {
+      res = await axios.post(url,data)
+    }
+    if(res.status===201 || res.status===200)
       navigate('/dashboard')
     
   }
 
   const UserForm = useFormik({
     initialValues:{
-      firstName:"",
-      lastName:"",
-      email:"",
-      dob:"",
-      mobile:"",
-      location:""
+      firstName:firstName,
+      lastName:lastName,
+      email:email,
+      dob:dob,
+      mobile:mobile,
+      location:location
     },
+    enableReinitialize:true,
     validationSchema:Yup.object({
       firstName:Yup.string().required("*Required").min(2,"First Name can not be less then 2 characters"),
       lastName:Yup.string().required("*Required").min(2,"Last Name can not be less then 2 characters"),
@@ -120,7 +152,7 @@ function CreateUser() {
           onBlur={UserForm.handleBlur}
           value={UserForm.values.location}
         />
-        {UserForm.touched.location && UserForm.errors.location?<div style={{"color":"red"}}>{UserForm.errors.location}</div>:<></>}
+        {UserForm.touched.location&& UserForm.errors.location?<div style={{"color":"red"}}>{UserForm.errors.location}</div>:<></>}
       </div>
 
       <button type="submit" className="btn btn-primary">Submit</button>
