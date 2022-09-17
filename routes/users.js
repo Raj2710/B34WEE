@@ -1,118 +1,100 @@
+const { application } = require('express');
 var express = require('express');
 var router = express.Router();
+const {dbName,dbUrl,mongodb,MongoClient} = require('../dbConfig');
+const {LoanRequest,resolutionRequest,mongoose} = require('../dbSchema')
+
+mongoose.connect(dbUrl)
 
 /* GET users listing. */
-var data = [
-  {
-    name:"Nagarajan",
-    email:"nag@gmail.com",
-    status:"Approved"
-  },
-  {
-    name:"Vimal",
-    email:"vimal@gmail.com",
-    status:"Pending"
-  },
-  {
-    name:"Lily",
-    email:"lily@gmail.com",
-    status:"Declined"
-  }
-]
-router.get('/', (req, res)=> {
-  res.send(data)
-});
 
-router.get('/:id',(req,res)=>{
-  if(req.params.id<data.length)
-  {
+router.get('/request',async(req,res)=>{
+  try {
+      let users = await LoanRequest.find()
       res.send({
-          statusCode:200,
-          data:data[req.params.id]
-      })
-  }
-  else
-  {
-      res.send({
-          statusCode:400,
-          message:'Requested Index not found'
-      })
-  }
-})
-
-router.post('/add-user',(req,res)=>{
-  data.push(req.body)
-    res.send({
         statusCode:200,
-        message:"Response Saved"
-    })
+        data:users
+      })
+  } catch (error) {
+    console.log(error)
+    res.send({statusCode:500,message:"Internal Server Error",error})
+  }
 })
 
-router.put('/:id',(req,res)=>{
-  if(req.params.id<data.length)
-  {
-     data[req.params.id].name = req.body.name
-     data[req.params.id].email = req.body.email
-     data[req.params.id].status =req.body.status
-
-     res.send({
+router.post('/request',async(req,res)=>{
+  try {
+    let users = await LoanRequest.create(req.body)
+    res.send({
       statusCode:200,
-      message:"Response Saved"
-  })
-
-  }
-  else
-  {
-      res.send({
-          statusCode:400,
-          message:'Requested Index not found'
-      })
+      data:users
+    })
+    
+  } catch (error) {
+    console.log(error)
+    res.send({statusCode:500,message:"Internal Server Error",error})
   }
 })
 
-router.put('/change-password/:id',(req,res)=>{
-  if(req.params.id<data.length)
-  {
-      if(data[req.params.id].password===req.body.old_pwd)
-      {
-          data[req.params.id].password = req.body.new_pwd
-          res.send({
-              statusCode:200,
-              message:"Password Changed Successfully"
-          })
-      }
-      else
-      {
-          res.send({
-              statusCode:401,
-              message:"Invalid current password"
-          })
-      }
-  }
-  else
-  {
-      res.send({
-          statusCode:400,
-          message:'Requested Index not found'
-      })
+router.put('/request/:id',async(req,res)=>{
+  try {
+    let users = await LoanRequest.find({_id:mongodb.ObjectId(req.params.id)})
+    console.log(users)
+    users[0].name = req.body.name
+    users[0].email = req.body.email
+    users[0].mobile = req.body.mobile
+    users[0].amount = req.body.amount
+    users[0].purpose = req.body.purpose
+    await users[0].save()
+   // let users = await LoanRequest.updateOne({_id:mongodb.ObjectId(req.params.id)},req.body)
+    res.send({
+      statusCode:200,
+      message:"Data Saved Succesfully"
+    })
+  } catch (error) {
+    console.log(error)
+    res.send({statusCode:500,message:"Internal Server Error",error})
   }
 })
 
-router.delete('/:id',(req,res)=>{
-  if(req.params.id<data.length)
-  {
-     data.splice(req.params.id,1)
-     res.send({
-       statusCode:200,
-       message:'Data Deleted Successfully'
-     })
+router.delete('/request/:id',async(req,res)=>{
+  try {
+    let users = await LoanRequest.deleteOne({_id:mongodb.ObjectId(req.params.id)})
+    res.send({
+      statusCode:200,
+      message:"Data Deleted Succesfully"
+    })
+  } catch (error) {
+    console.log(error)
+    res.send({statusCode:500,message:"Internal Server Error",error})
   }
-  else
-  {
+})
+
+
+router.get('/resolution',async(req,res)=>{
+  try {
+      let users = await resolutionRequest.find()
       res.send({
-          statusCode:400,
-          message:'Requested Index not found'
+        statusCode:200,
+        data:users
       })
+  } catch (error) {
+    console.log(error)
+    res.send({statusCode:500,message:"Internal Server Error",error})
+  }
+})
+
+router.post('/resolution',async(req,res)=>{
+  try {
+    console.log(req.body)
+    let users = await resolutionRequest.create(req.body)
+    res.send({
+      statusCode:200,
+      data:users
+    })
+    
+  } catch (error) {
+    console.log(error)
+    res.send({statusCode:500,message:"Internal Server Error",error})
   }
 })
 
