@@ -1,9 +1,35 @@
 var express = require('express');
 var router = express.Router();
-const {hashPassword,hashCompare} = require('../auth')
+const {hashPassword,hashCompare,createToken,decodeToken,validity,adminGaurd} = require('../auth')
 const {mongodb,dbName,dbUrl,MongoClient} = require('../dbConfig')
 
 const client = new mongodb.MongoClient(dbUrl);
+
+router.get('/all',adminGaurd,validity,async(req,res)=>{
+    await client.connect()
+    try {
+      const db = await client.db(dbName);
+      let token = req.headers.authorization.split(' ')[1];
+      let data = await decodeToken(token)
+      let user = await db.collection('users').findOne({email:data.email})
+      if(user)
+      {
+        let users = await db.collection('users').find().project({password:0}).toArray();
+        res.send({statusCode:200,users})
+      }
+      else
+      {
+        res.send({statusCode:400,message:"Invalid User"})
+      }
+    } catch (error) {
+      console.log(error)
+      res.send({statusCode:500, message:"Internal Server Error", error})
+    }
+    finally
+    {
+      client.close()
+    }
+})
 
 router.post('/signup',async(req,res)=>{
   await client.connect()
@@ -49,10 +75,12 @@ router.post('/signin',async(req,res)=>{
       if(user)
       {
           const compare = hashCompare(req.body.password,user.password)
-          if(compare)
+          if(compare)//if the paswword matches then provide token
           {
+            let token = await createToken(user.email,user.firstName,user.role)
             res.send({
               statusCode:200,
+              token,
               message:"Sign In Successfull"
             })
           }
