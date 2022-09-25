@@ -19,7 +19,7 @@ let createToken = async (email,firstName,role)=>{
         email,
         firstName,
         role
-    },secret,{expiresIn:'10m'})
+    },secret,{expiresIn:'1m'})
     return token
 }
 
@@ -29,27 +29,45 @@ let decodeToken = (token)=>{
 }
 
 let validity = async(req,res,next)=>{
-    let token = req.headers.authorization.split(' ')[1];
-    let data = await jwt.decode(token)
-    if((Math.round(+new Date()/1000))<=data.exp)
-    {
-        next()
+    if(req.headers.authorization){
+        let token = req.headers.authorization.split(' ')[1];
+        let data = await jwt.decode(token)
+        if((Math.round(+new Date()/1000))<=data.exp)
+        {
+            next()
+        }
+        else
+        {
+            res.send({
+                statusCode:401,
+                message:"Token Expired"
+            })
+        }
     }
     else
     {
         res.send({
             statusCode:401,
-            message:"Token Expired"
+            message:"Token Not Found"
         })
     }
 }
 
 let adminGaurd = async(req,res,next)=>{
-    let token = req.headers.authorization.split(' ')[1];
-    let data = await jwt.decode(token)
-    if(data.role=='admin')
-        next()
+    if(req.headers.authorization){
+        let token = req.headers.authorization.split(' ')[1];
+        let data = await jwt.decode(token)
+        if(data.role=='admin')
+            next()
+        else
+            res.send({statusCode:401,message:"Only Admin is allowed to Access"})
+    }
     else
-        res.send({statusCode:401,message:"Only Admin is allowed to Access"})
+    {
+        res.send({
+            statusCode:401,
+            message:"Token Not Found"
+        })
+    }
 }
 module.exports = {hashPassword,hashCompare,createToken,decodeToken,validity,adminGaurd}
