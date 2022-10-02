@@ -23,7 +23,7 @@ function ZenForm() {
 
     let loadIssueTypes = async()=>{
        let res = await axios.get(`${commonContext.apiurl}/issue-types`)
-       if(res.data.statusCode==200)
+       if(res.data.statusCode===200)
        {
             setIssueTypes(res.data.issueTypes)
        }

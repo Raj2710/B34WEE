@@ -1,34 +1,42 @@
-import React,{useState,useContext} from 'react'
+import React,{useState,useContext, useEffect} from 'react'
 import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
 import axios from 'axios'
 import { CommonContext } from '../App';
+import {useParams} from 'react-router-dom'
+import {useNavigate} from 'react-router-dom';
 
-function Status() {
+function Issues() {
   let commonContext = useContext(CommonContext)
+  let params = useParams();
   let [data,setData] = useState(undefined)
-  let [ticket,setTicket] = useState("")
+  let [comment,setComment] = useState("");
+  let navigate = useNavigate();
 
   let handleLoadTicket = async()=>{
-    let res = await axios.get(`${commonContext.apiurl}/issues/${ticket}`)
+    let res = await axios.get(`${commonContext.apiurl}/issues/${params.id}`)    
     if(res.data.statusCode===200)
     {
       setData(res.data.issue[0])
+      setComment(res.data.issue[0].comments)
+    }
+  }
+
+  useEffect(()=>{
+    handleLoadTicket()
+  },[])
+
+
+  let nextStage = async(stage)=>{
+    let res = await axios.put(`${commonContext.apiurl}/change-status/${params.id}`,{
+        comments:comment
+    })
+    if(res.data.statusCode===200)
+    {
+        navigate('/dashboard')
     }
   }
   return <>
   <div className='col-5 mx-auto'>
-    <Form>
-    <Form.Group className="mb-3">
-        <Form.Label>Ticket Number<sup>*</sup></Form.Label>
-        <Form.Control type="text" placeholder="Enter Ticket Nuber"  onChange={(e)=>setTicket(e.target.value)}/>
-      </Form.Group>
-      <div className='mt-3' style={{"textAlign":"center"}}>
-            <Button variant="primary" onClick={()=>handleLoadTicket()} >
-                Submit
-            </Button>
-        </div>
-    </Form>
     {
       data!==undefined?<>
               <div style={{"textAlign":"left","paddingTop":"20px"}}>
@@ -44,14 +52,24 @@ function Status() {
                   data.status==="Clossed"?
                   <div><strong>Closed Date : </strong>{data.closedDate}</div>:<></>
                 }
-                <div><strong>Comment :</strong> {data.comments}</div>
-                
+                <div><strong>Comment :</strong> 
+                <input type={"textArea"} value={comment} onChange={(e)=>setComment(e.target.value)}/>
                 </div>
-              </div>
+                <br></br>
+                </div>
+                    <Button variant='primary' onClick={()=>{
+                        navigate('/dashboard')
+                        }}>Go Back to Dashboard</Button>
+                        &nbsp;
+                    {
+                        data.status==="Open"?<Button variant='warning' onClick={()=>{nextStage()}}>In-Progress</Button>
+                        :data.status==="In-Progress"?<Button variant='success' onClick={()=>{nextStage()}}>Close</Button>:<></>
+                    }
+                </div>
             </>:<></>
     }
     </div>
   </>
 }
 
-export default Status
+export default Issues
