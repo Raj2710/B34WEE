@@ -171,6 +171,7 @@ router.put('/change-status/:id',async(req,res)=>{
     let issue = await issueModel.findOne({_id:mongodb.ObjectId(req.params.id)})
     switch (issue.status) {
       case 'Open':issue.status="In-Progress"
+                  issue.comments=req.body.comments
                   issue.inProgressDate=new Date()
                   break;
       case 'In-Progress':issue.status="Clossed"
