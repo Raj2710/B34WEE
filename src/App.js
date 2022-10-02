@@ -7,7 +7,7 @@ import Status from './components/Status';
 import Dashboard from './components/Dashboard';
 import Issues from './components/Issues';
 export const CommonContext = React.createContext();
-const apiurl = 'http://localhost:8000'
+const apiurl = 'https://zendesk-be.herokuapp.com'
 function App() {
   return <>
     <BrowserRouter>
